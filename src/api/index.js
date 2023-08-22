@@ -39,9 +39,16 @@ export const fetchDailyData = async () => {
 
 export const fetchCountries = async () => {
   try {
-    const { data: { countries } } = await axios.get(`${url}/countries`);
-    return countries.map((country) => country.name);
+    const response = await axios.get(`${url}/countries`);
+    const { data } = response;
+
+    if (data && data.countries) {
+      return data.countries.map((country) => country.name);
+    }
+
+    throw new Error('Invalid response from API');
   } catch (error) {
-    return error;
+    console.error('Error fetching countries:', error);
+    return []; // Return an empty array or handle the error as needed
   }
 };
